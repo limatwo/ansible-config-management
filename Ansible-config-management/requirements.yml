@@ -1,0 +1,12 @@
+---
+# Ansible Galaxy requirements
+collections:
+  - community.general
+  - ansible.posix
+  - community.crypto
+
+roles:
+  - src: geerlingguy.security
+    version: "1.8.0"
+  - src: geerlingguy.firewall
+    version: "1.3.0"

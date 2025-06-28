@@ -1,0 +1,65 @@
+- name: Install Nginx
+  apt:
+    name: nginx
+    state: present
+    update_cache: yes
+  tags:
+    - nginx
+
+- name: Create web directory
+  file:
+    path: "{{ web_root }}"
+    state: directory
+    owner: www-data
+    group: www-data
+    mode: '0755'
+  tags:
+    - nginx
+
+- name: Create Nginx configuration
+  template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/nginx.conf
+    backup: yes
+  notify: restart nginx
+  tags:
+    - nginx
+    - config
+
+- name: Remove default Nginx site
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  notify: restart nginx
+  tags:
+    - nginx
+
+- name: Create SSL directory
+  file:
+    path: /etc/nginx/ssl
+    state: directory
+    mode: '0700'
+  when: ssl_enabled | default(false)
+  tags:
+    - ssl
+
+- name: Generate SSL certificate (self-signed for demo)
+  command: |
+    openssl req -x509 -nodes -days 365 -newkey rsa:2048 
+    -keyout /etc/nginx/ssl/{{ item.name }}.key 
+    -out /etc/nginx/ssl/{{ item.name }}.crt 
+    -subj "/C=US/ST=State/L=City/O=Organization/CN={{ item.name }}"
+  loop: "{{ virtual_hosts }}"
+  when: ssl_enabled | default(false) and item.ssl | default(false)
+  args:
+    creates: "/etc/nginx/ssl/{{ item.name }}.crt"
+  tags:
+    - ssl
+
+- name: Start and enable Nginx
+  systemd:
+    name: nginx
+    state: started
+    enabled: yes
+  tags:
+    - nginx

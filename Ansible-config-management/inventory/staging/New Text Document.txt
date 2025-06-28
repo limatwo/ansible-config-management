@@ -1,0 +1,32 @@
+# File: staging
+# Location: ansible-config-management/inventory/staging
+[webservers]
+web1.staging.example.com ansible_host=10.1.1.10
+web2.staging.example.com ansible_host=10.1.1.11
+
+[databases]
+db1.staging.example.com ansible_host=10.1.2.10
+
+[monitoring]
+monitor.staging.example.com ansible_host=10.1.3.10
+
+[loadbalancers]
+lb1.staging.example.com ansible_host=10.1.4.10
+
+[app_servers:children]
+webservers
+databases
+
+[infrastructure:children]
+monitoring
+loadbalancers
+
+[staging:children]
+app_servers
+infrastructure
+
+[staging:vars]
+environment=staging
+backup_enabled=false
+ssl_enabled=false
+monitoring_enabled=true

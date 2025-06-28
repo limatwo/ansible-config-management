@@ -1,0 +1,17 @@
+web_root: "/var/www/html"
+nginx_worker_connections: 1024
+nginx_keepalive_timeout: 65
+nginx_client_max_body_size: "64M"
+nginx_access_log: "/var/log/nginx/access.log"
+nginx_error_log: "/var/log/nginx/error.log"
+
+virtual_hosts:
+  - name: "default"
+    server_name: "{{ ansible_fqdn }}"
+    document_root: "{{ web_root }}"
+    ssl: "{{ ssl_enabled | default(false) }}"
+    port: 80
+    ssl_port: 443
+
+ssl_certificate_path: "/etc/nginx/ssl"
+ssl_protocols: "TLSv1.2 TLSv1.3"

@@ -1,0 +1,58 @@
+---
+# Global variables for all hosts
+# System Configuration
+system_timezone: "UTC"
+update_packages: false
+
+# User Management
+admin_group: "admin"
+admin_users:
+  - name: "devops"
+    ssh_key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC... devops@company.com"
+  - name: "sysadmin"
+    ssh_key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC... sysadmin@company.com"
+
+# Firewall Rules
+firewall_rules:
+  - rule: allow
+    port: 22
+    proto: tcp
+  - rule: allow
+    port: 80
+    proto: tcp
+  - rule: allow
+    port: 443
+    proto: tcp
+
+# Common Packages
+common_packages:
+  - curl
+  - wget
+  - git
+  - htop
+  - vim
+  - unzip
+
+# Environment Settings
+environment: "production"
+backup_enabled: true
+monitoring_enabled: true
+ssl_enabled: true
+
+# Logging Configuration
+log_level: "info"
+log_retention_days: 30
+
+# Security Settings
+fail2ban_enabled: true
+ssh_password_authentication: false
+ssh_permit_root_login: false
+
+# Network Configuration
+dns_servers:
+  - "8.8.8.8"
+  - "8.8.4.4"
+
+# Backup Configuration
+backup_schedule: "0 2 * * *"  # Daily at 2 AM
+backup_retention: 7  # Keep 7 days of backups

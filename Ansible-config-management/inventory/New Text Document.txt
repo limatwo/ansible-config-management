@@ -1,0 +1,34 @@
+# File: production
+# Location: ansible-config-management/inventory/production
+[webservers]
+web1.prod.example.com ansible_host=10.0.1.10
+web2.prod.example.com ansible_host=10.0.1.11
+web3.prod.example.com ansible_host=10.0.1.12
+
+[databases]
+db1.prod.example.com ansible_host=10.0.2.10
+db2.prod.example.com ansible_host=10.0.2.11
+
+[monitoring]
+monitor.prod.example.com ansible_host=10.0.3.10
+
+[loadbalancers]
+lb1.prod.example.com ansible_host=10.0.4.10
+
+[app_servers:children]
+webservers
+databases
+
+[infrastructure:children]
+monitoring
+loadbalancers
+
+[production:children]
+app_servers
+infrastructure
+
+[production:vars]
+environment=production
+backup_enabled=true
+ssl_enabled=true
+monitoring_enabled=true
